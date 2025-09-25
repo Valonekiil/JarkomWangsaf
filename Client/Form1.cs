@@ -30,7 +30,7 @@ namespace Client
             chat_list_box.Enabled = enable;
         }
 
-        private async void Connect_ip_btn_Click(object sender, EventArgs e)
+        private async void connect_ip_btn_Click_1(object sender, EventArgs e)
         {
             if (isConnected)
             {
@@ -303,6 +303,6 @@ namespace Client
             user_online.Text = "Users online: 0";
             SetStatus("Disconnected");
         }
-        }
+
     }
 }

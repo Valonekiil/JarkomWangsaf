@@ -19,14 +19,3 @@ C:\Users\Val\Documents\Project\JarkomKelompok\Client\obj\Debug\Client.csproj.Gen
 C:\Users\Val\Documents\Project\JarkomKelompok\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
 C:\Users\Val\Documents\Project\JarkomKelompok\Client\obj\Debug\Client.exe
 C:\Users\Val\Documents\Project\JarkomKelompok\Client\obj\Debug\Client.pdb
-S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.csproj.AssemblyReference.cache
-S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.exe.config
-S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.Form1.resources
-S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.Properties.Resources.resources
-S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.csproj.GenerateResource.cache
-S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
-S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.exe
-S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.pdb
-S:\Giyhub\JarkomWangsaf\Client\bin\Debug\Client.exe.config
-S:\Giyhub\JarkomWangsaf\Client\bin\Debug\Client.exe
-S:\Giyhub\JarkomWangsaf\Client\bin\Debug\Client.pdb

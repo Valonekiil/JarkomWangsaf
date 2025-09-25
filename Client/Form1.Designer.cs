@@ -90,7 +90,6 @@
             this.connect_ip_btn.TabIndex = 5;
             this.connect_ip_btn.Text = "Connect";
             this.connect_ip_btn.UseVisualStyleBackColor = true;
-            this.connect_ip_btn.Click += connect_ip_btn_Click_1;
             // 
             // uname_lbl
             // 

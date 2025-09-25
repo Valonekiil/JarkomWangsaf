@@ -55,7 +55,7 @@ namespace ChatServer
                 string username = parts[1];
                 clientInfo.Username = username;
                 clients.Add(clientInfo);
-                BroadcastSystemMessage($"{username} joined the chat");
+                BroadcastSystemMessage($"{username} has appear");
                 await SendUserListToAll();
                 Console.WriteLine($"{username} connected from {client.Client.RemoteEndPoint}");
                 while (client.Connected)
@@ -76,7 +76,7 @@ namespace ChatServer
                 clients.Remove(clientInfo);
                 if (!string.IsNullOrEmpty(clientInfo.Username))
                 {
-                    BroadcastSystemMessage($"{clientInfo.Username} left the chat");
+                    BroadcastSystemMessage($"{clientInfo.Username} has cease to exist");
                     await SendUserListToAll();
                     Console.WriteLine($"{clientInfo.Username} disconnected");
                 }

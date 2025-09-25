@@ -303,6 +303,5 @@ namespace Client
             user_online.Text = "Users online: 0";
             SetStatus("Disconnected");
         }
-        }
     }
 }

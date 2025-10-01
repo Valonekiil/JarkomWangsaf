@@ -33,7 +33,7 @@ namespace ChatServer
                 try
                 {
                     TcpClient client = await listener.AcceptTcpClientAsync();
-                    Task ClientHandling = Task.Run(() => HandleClient(client));
+                    _ = Task.Run(() => HandleClient(client));
                 }
                 catch (Exception ex)
                 {
@@ -49,21 +49,42 @@ namespace ChatServer
 
             try
             {
+                // Read login information
                 int bytesRead = await clientInfo.Stream.ReadAsync(buffer, 0, buffer.Length);
-                string loginData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                string loginData = new UTF8Encoding(false, true).GetString(buffer, 0, bytesRead);
+
                 string[] parts = loginData.Split('|');
+                if (parts.Length < 2 || parts[0] != "LOGIN")
+                {
+                    await SendError(clientInfo.Stream, "Invalid login format");
+                    client.Close();
+                    return;
+                }
+
                 string username = parts[1];
+                if (string.IsNullOrEmpty(username) || IsUsernameTaken(username))
+                {
+                    await SendError(clientInfo.Stream, "Username is invalid or already taken");
+                    client.Close();
+                    return;
+                }
+
                 clientInfo.Username = username;
                 clients.Add(clientInfo);
-                BroadcastSystemMessage($"{username} has appear");
+
+                // Notify all clients about new user
+                BroadcastSystemMessage($"{username} joined the chat");
                 await SendUserListToAll();
+
                 Console.WriteLine($"{username} connected from {client.Client.RemoteEndPoint}");
+
+                // Main message loop
                 while (client.Connected)
                 {
                     bytesRead = await clientInfo.Stream.ReadAsync(buffer, 0, buffer.Length);
-                    if (bytesRead == 0) break;
+                    if (bytesRead == 0) break; // Client disconnected
 
-                    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    string message = new UTF8Encoding(false, true).GetString(buffer, 0, bytesRead);
                     ProcessClientMessage(clientInfo, message);
                 }
             }
@@ -73,10 +94,11 @@ namespace ChatServer
             }
             finally
             {
+                // Cleanup on disconnect
                 clients.Remove(clientInfo);
                 if (!string.IsNullOrEmpty(clientInfo.Username))
                 {
-                    BroadcastSystemMessage($"{clientInfo.Username} has cease to exist");
+                    BroadcastSystemMessage($"{clientInfo.Username} left the chat");
                     await SendUserListToAll();
                     Console.WriteLine($"{clientInfo.Username} disconnected");
                 }
@@ -105,8 +127,17 @@ namespace ChatServer
                         }
                         break;
 
+                    case "PRIVATE":
+                        if (parts.Length >= 3)
+                        {
+                            string targetUser = parts[1];
+                            string privateMsg = parts[2];
+                            SendPrivateMessage(sender.Username, targetUser, privateMsg);
+                        }
+                        break;
+
                     case "LOGOUT":
-                        Console.WriteLine($"{sender.Username ?? "Unknown"} mengirim sinyal logout");
+                        // Client will be disconnected in the main loop
                         break;
                 }
             }
@@ -115,9 +146,9 @@ namespace ChatServer
         private async void BroadcastMessage(string sender, string message)
         {
             string formattedMessage = $"MESSAGE|{sender}|{message}";
-            byte[] data = Encoding.UTF8.GetBytes(formattedMessage + Environment.NewLine);
+            byte[] data = new UTF8Encoding(false, true).GetBytes(formattedMessage + Environment.NewLine);
 
-            foreach (var client in clients.ToArray())
+            foreach (var client in clients.ToArray()) // ToArray to avoid modification during iteration
             {
                 try
                 {
@@ -132,10 +163,30 @@ namespace ChatServer
             Console.WriteLine($"{sender}: {message}");
         }
 
+        private async void SendPrivateMessage(string from, string to, string message)
+        {
+            string formattedMessage = $"PRIVATE|{from}|{to}|{message}";
+            byte[] data = new UTF8Encoding(false, true).GetBytes(formattedMessage + Environment.NewLine);
+
+            var sender = clients.Find(c => c.Username == from);
+            if (sender != null && sender.Stream != null)
+            {
+                await sender.Stream.WriteAsync(data, 0, data.Length);
+            }
+
+            var recipient = clients.Find(c => c.Username == to);
+            if (recipient != null && recipient.Stream != null)
+            {
+                await recipient.Stream.WriteAsync(data, 0, data.Length);
+            }
+
+            Console.WriteLine($"PM {from} -> {to}: {message}");
+        }
+
         private async void BroadcastSystemMessage(string message)
         {
             string formattedMessage = $"SYSTEM|{message}";
-            byte[] data = Encoding.UTF8.GetBytes(formattedMessage + Environment.NewLine);
+            byte[] data = new UTF8Encoding(false, true).GetBytes(formattedMessage + Environment.NewLine);
 
             foreach (var client in clients.ToArray())
             {
@@ -159,7 +210,7 @@ namespace ChatServer
         {
             string userList = string.Join(",", GetUsernames());
             string formattedMessage = $"USERLIST|{userList}";
-            byte[] data = Encoding.UTF8.GetBytes(formattedMessage + Environment.NewLine);
+            byte[] data = new UTF8Encoding(false, true).GetBytes(formattedMessage + Environment.NewLine);
 
             foreach (var client in clients.ToArray())
             {
@@ -190,6 +241,18 @@ namespace ChatServer
             return usernames;
         }
 
+        private bool IsUsernameTaken(string username)
+        {
+            return clients.Exists(c => c.Username != null && c.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private async Task SendError(NetworkStream stream, string error)
+        {
+            string formattedMessage = $"ERROR|{error}";
+            byte[] data = new UTF8Encoding(false, true).GetBytes(formattedMessage);
+            await stream.WriteAsync(data, 0, data.Length);
+        }
+
         public void StopServer()
         {
             isRunning = false;
@@ -208,16 +271,25 @@ namespace ChatServer
     {
         static async Task Main(string[] args)
         {
+            // Supaya console bisa tampil emoji dan karakter spesial
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;
+
             ChatServer server = new ChatServer();
-            int port = 8888;
+            int port = 8888; // Default port
+
             if (args.Length > 0 && int.TryParse(args[0], out int customPort))
             {
                 port = customPort;
             }
+
             Console.WriteLine("Starting chat server...");
             Console.WriteLine($"Press any key to stop the server");
+
             var serverTask = server.StartServer(port);
+
             Console.ReadKey();
+
             server.StopServer();
             await serverTask;
 

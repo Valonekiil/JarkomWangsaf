@@ -30,3 +30,13 @@ S:\Giyhub\JarkomWangsaf\Client\obj\Debug\Client.pdb
 S:\Giyhub\JarkomWangsaf\Client\bin\Debug\Client.exe.config
 S:\Giyhub\JarkomWangsaf\Client\bin\Debug\Client.exe
 S:\Giyhub\JarkomWangsaf\Client\bin\Debug\Client.pdb
+C:\Users\Valone\Documents\JarkomWangsaf\Client\bin\Debug\Client.exe.config
+C:\Users\Valone\Documents\JarkomWangsaf\Client\bin\Debug\Client.exe
+C:\Users\Valone\Documents\JarkomWangsaf\Client\bin\Debug\Client.pdb
+C:\Users\Valone\Documents\JarkomWangsaf\Client\obj\Debug\Client.csproj.AssemblyReference.cache
+C:\Users\Valone\Documents\JarkomWangsaf\Client\obj\Debug\Client.Form1.resources
+C:\Users\Valone\Documents\JarkomWangsaf\Client\obj\Debug\Client.Properties.Resources.resources
+C:\Users\Valone\Documents\JarkomWangsaf\Client\obj\Debug\Client.csproj.GenerateResource.cache
+C:\Users\Valone\Documents\JarkomWangsaf\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\Valone\Documents\JarkomWangsaf\Client\obj\Debug\Client.exe
+C:\Users\Valone\Documents\JarkomWangsaf\Client\obj\Debug\Client.pdb

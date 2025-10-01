@@ -13,14 +13,13 @@ namespace Client
         private NetworkStream stream;
         private bool isConnected = false;
         private string username = "";
-        private readonly int port = 8888;
-
         private bool keepReceiving = false;
 
         public Form1()
         {
             InitializeComponent();
             ToggleChatFunctionality(false);
+            this.FormClosing += Form1_FormClosing;
         }
 
         private void ToggleChatFunctionality(bool enable)
@@ -46,6 +45,7 @@ namespace Client
             try
             {
                 string ipAddress = connect_ip_box.Text.Trim();
+                string portText = port_connect_box.Text.Trim();
                 username = set_username_box.Text.Trim();
 
                 if (string.IsNullOrEmpty(username))
@@ -57,6 +57,12 @@ namespace Client
                 if (string.IsNullOrEmpty(ipAddress))
                 {
                     MessageBox.Show("Please enter a server IP address");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(portText) || !int.TryParse(portText, out int port))
+                {
+                    MessageBox.Show("Please enter a valid server port");
                     return;
                 }
 
@@ -73,7 +79,7 @@ namespace Client
                     throw new Exception("Connection timeout");
                 }
 
-                await connectTask; 
+                await connectTask;
 
                 stream = client.GetStream();
                 isConnected = true;
@@ -89,6 +95,7 @@ namespace Client
                 connect_ip_btn.Enabled = true;
                 set_username_box.Enabled = false;
                 connect_ip_box.Enabled = false;
+                port_connect_box.Enabled = false;
                 SetStatus("Connected");
 
                 AddSystemMessage("Connected to server successfully");
@@ -123,6 +130,24 @@ namespace Client
 
                     string data = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                     ProcessReceivedData(data);
+                }
+                catch (IOException)
+                {
+                    // Connection lost
+                    if (isConnected)
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            AddSystemMessage("Connection lost");
+                            DisconnectFromServer();
+                        }));
+                    }
+                    break;
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Stream was disposed, exit loop
+                    break;
                 }
                 catch (Exception ex)
                 {
@@ -166,6 +191,19 @@ namespace Client
                         UpdateUserList(content);
                         break;
 
+                    case "ERROR":
+                        ShowError(content);
+                        break;
+
+                    case "PRIVATE":
+                        if (parts.Length >= 4)
+                        {
+                            string from = parts[1];
+                            string msg = parts[3];
+                            AddPrivateMessageToChat(from, msg);
+                        }
+                        break;
+
                     case "SYSTEM":
                         AddSystemMessage(content);
                         break;
@@ -182,6 +220,19 @@ namespace Client
             else
             {
                 chat_list_box.AppendText($"[{DateTime.Now:HH:mm}] {sender}: {message}\r\n");
+                chat_list_box.ScrollToCaret();
+            }
+        }
+
+        private void AddPrivateMessageToChat(string sender, string message)
+        {
+            if (chat_list_box.InvokeRequired)
+            {
+                chat_list_box.Invoke(new Action<string, string>(AddPrivateMessageToChat), sender, message);
+            }
+            else
+            {
+                chat_list_box.AppendText($"[{DateTime.Now:HH:mm}] [PM from {sender}]: {message}\r\n");
                 chat_list_box.ScrollToCaret();
             }
         }
@@ -221,6 +272,18 @@ namespace Client
             }
         }
 
+        private void ShowError(string error)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string>(ShowError), error);
+            }
+            else
+            {
+                MessageBox.Show($"Server error: {error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void SetStatus(string status)
         {
             if (InvokeRequired)
@@ -247,7 +310,29 @@ namespace Client
             try
             {
                 string protocolMessage;
-                protocolMessage = $"MESSAGE|{message}";
+
+                // Check for private message command
+                if (message.StartsWith("/w "))
+                {
+                    // Format: /w username message
+                    var parts = message.Split(new[] { ' ' }, 3);
+                    if (parts.Length >= 3)
+                    {
+                        string targetUser = parts[1];
+                        string privateMsg = parts[2];
+                        protocolMessage = $"PRIVATE|{targetUser}|{privateMsg}";
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid private message format. Use: /w username message");
+                        return;
+                    }
+                }
+                else
+                {
+                    protocolMessage = $"MESSAGE|{message}";
+                }
+
                 byte[] data = Encoding.UTF8.GetBytes(protocolMessage);
                 await stream.WriteAsync(data, 0, data.Length);
                 message_box.Clear();
@@ -262,6 +347,15 @@ namespace Client
         private void Send_msg_btn_Click(object sender, EventArgs e)
         {
             SendMessage();
+        }
+
+        private void Message_box_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter && isConnected)
+            {
+                SendMessage();
+                e.Handled = true;
+            }
         }
 
         private void DisconnectFromServer()
@@ -279,7 +373,7 @@ namespace Client
             }
             catch
             {
-
+                // Ignore errors during disconnect
             }
 
             try { stream?.Close(); } catch { }
@@ -299,9 +393,34 @@ namespace Client
             connect_ip_btn.Enabled = true;
             set_username_box.Enabled = true;
             connect_ip_box.Enabled = true;
+            port_connect_box.Enabled = true;
             listBox1.Items.Clear();
             user_online.Text = "Users online: 0";
             SetStatus("Disconnected");
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (isConnected)
+            {
+                DisconnectFromServer();
+            }
+        }
+
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Auto-fill private message command when user is selected
+            if (listBox1.SelectedItem != null)
+            {
+                string selectedUser = listBox1.SelectedItem.ToString();
+                message_box.Text = $"/w {selectedUser} ";
+                message_box.Focus();
+                message_box.SelectionStart = message_box.Text.Length;
+            }
+        }
+
+        // Event handlers untuk textbox changes
+        private void textBox1_TextChanged(object sender, EventArgs e) { }
+        private void textBox2_TextChanged(object sender, EventArgs e) { }
     }
 }

@@ -49,17 +49,12 @@ namespace ChatServer
 
             try
             {
-                // Read login information
+                // Membaca informais login
                 int bytesRead = await clientInfo.Stream.ReadAsync(buffer, 0, buffer.Length);
                 string loginData = new UTF8Encoding(false, true).GetString(buffer, 0, bytesRead);
 
                 string[] parts = loginData.Split('|');
-                if (parts.Length < 2 || parts[0] != "LOGIN")
-                {
-                    await SendError(clientInfo.Stream, "Invalid login format");
-                    client.Close();
-                    return;
-                }
+
 
                 string username = parts[1];
                 if (string.IsNullOrEmpty(username) || IsUsernameTaken(username))
@@ -72,7 +67,7 @@ namespace ChatServer
                 clientInfo.Username = username;
                 clients.Add(clientInfo);
 
-                // Notify all clients about new user
+                // Memberi tahu ke semua client kalau ada user baru
                 BroadcastSystemMessage($"{username} has appear");
                 await SendUserListToAll();
 
@@ -82,7 +77,7 @@ namespace ChatServer
                 while (client.Connected)
                 {
                     bytesRead = await clientInfo.Stream.ReadAsync(buffer, 0, buffer.Length);
-                    if (bytesRead == 0) break; // Client disconnected
+                    if (bytesRead == 0) break;
 
                     string message = new UTF8Encoding(false, true).GetString(buffer, 0, bytesRead);
                     ProcessClientMessage(clientInfo, message);
@@ -94,7 +89,7 @@ namespace ChatServer
             }
             finally
             {
-                // Cleanup on disconnect
+               //Menghapus bekas disconnected
                 clients.Remove(clientInfo);
                 if (!string.IsNullOrEmpty(clientInfo.Username))
                 {

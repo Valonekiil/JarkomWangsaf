@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Client
 {
@@ -14,12 +15,99 @@ namespace Client
         private bool isConnected = false;
         private string username = "";
         private bool keepReceiving = false;
+        private bool isDarkMode = false;
 
         public Form1()
         {
             InitializeComponent();
             ToggleChatFunctionality(false);
             this.FormClosing += Form1_FormClosing;
+            ApplyLightTheme();
+        }
+
+        private void ApplyLightTheme()
+        {
+            isDarkMode = false;
+
+            this.BackColor = SystemColors.Window;
+            chat_list_box.BackColor = SystemColors.Window;
+            message_box.BackColor = SystemColors.Window;
+            set_username_box.BackColor = SystemColors.Window;
+            connect_ip_box.BackColor = SystemColors.Window;
+            port_connect_box.BackColor = SystemColors.Window;
+            listBox1.BackColor = SystemColors.Window;
+
+            this.ForeColor = SystemColors.WindowText;
+            chat_list_box.ForeColor = SystemColors.WindowText;
+            message_box.ForeColor = SystemColors.WindowText;
+            set_username_box.ForeColor = SystemColors.WindowText;
+            connect_ip_box.ForeColor = SystemColors.WindowText;
+            port_connect_box.ForeColor = SystemColors.WindowText;
+            listBox1.ForeColor = SystemColors.WindowText;
+            uname_lbl.ForeColor = SystemColors.WindowText;
+            user_online.ForeColor = SystemColors.WindowText;
+            message_lbl.ForeColor = SystemColors.WindowText;
+            label1.ForeColor = SystemColors.WindowText;
+            label2.ForeColor = SystemColors.WindowText;
+            label3.ForeColor = SystemColors.WindowText;
+
+            send_msg_btn.BackColor = SystemColors.Control;
+            send_msg_btn.ForeColor = SystemColors.ControlText;
+            connect_ip_btn.BackColor = SystemColors.Control;
+            connect_ip_btn.ForeColor = SystemColors.ControlText;
+
+            lightThemeToolStripMenuItem.Checked = true;
+            darkThemeToolStripMenuItem.Checked = false;
+        }
+
+        private void ApplyDarkTheme()
+        {
+            isDarkMode = true;
+
+            Color darkBackground = Color.FromArgb(45, 45, 48);
+            Color darkForeground = Color.FromArgb(241, 241, 241);
+            Color darkControl = Color.FromArgb(63, 63, 70);
+            Color darkText = Color.FromArgb(241, 241, 241);
+
+            this.BackColor = darkBackground;
+            chat_list_box.BackColor = darkBackground;
+            message_box.BackColor = darkControl;
+            set_username_box.BackColor = darkControl;
+            connect_ip_box.BackColor = darkControl;
+            port_connect_box.BackColor = darkControl;
+            listBox1.BackColor = darkControl;
+
+            this.ForeColor = darkForeground;
+            chat_list_box.ForeColor = darkText;
+            message_box.ForeColor = darkText;
+            set_username_box.ForeColor = darkText;
+            connect_ip_box.ForeColor = darkText;
+            port_connect_box.ForeColor = darkText;
+            listBox1.ForeColor = darkText;
+            uname_lbl.ForeColor = darkText;
+            user_online.ForeColor = darkText;
+            message_lbl.ForeColor = darkText;
+            label1.ForeColor = darkText;
+            label2.ForeColor = darkText;
+            label3.ForeColor = darkText;
+
+            send_msg_btn.BackColor = darkControl;
+            send_msg_btn.ForeColor = darkText;
+            connect_ip_btn.BackColor = darkControl;
+            connect_ip_btn.ForeColor = darkText;
+
+            lightThemeToolStripMenuItem.Checked = false;
+            darkThemeToolStripMenuItem.Checked = true;
+        }
+
+        private void LightThemeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplyLightTheme();
+        }
+
+        private void DarkThemeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplyDarkTheme();
         }
 
         private void ToggleChatFunctionality(bool enable)
@@ -133,7 +221,6 @@ namespace Client
                 }
                 catch (IOException)
                 {
-                    // Connection lost
                     if (isConnected)
                     {
                         Invoke(new Action(() =>
@@ -146,7 +233,6 @@ namespace Client
                 }
                 catch (ObjectDisposedException)
                 {
-                    // Stream was disposed, exit loop
                     break;
                 }
                 catch (Exception ex)
@@ -311,10 +397,8 @@ namespace Client
             {
                 string protocolMessage;
 
-                // Check for private message command
                 if (message.StartsWith("/w "))
                 {
-                    // Format: /w username message
                     var parts = message.Split(new[] { ' ' }, 3);
                     if (parts.Length >= 3)
                     {
@@ -371,10 +455,7 @@ namespace Client
                     stream.Write(data, 0, data.Length);
                 }
             }
-            catch
-            {
-                // Ignore errors during disconnect
-            }
+            catch { }
 
             try { stream?.Close(); } catch { }
             try { client?.Close(); } catch { }
@@ -409,7 +490,6 @@ namespace Client
 
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Auto-fill private message command when user is selected
             if (listBox1.SelectedItem != null)
             {
                 string selectedUser = listBox1.SelectedItem.ToString();
@@ -418,9 +498,5 @@ namespace Client
                 message_box.SelectionStart = message_box.Text.Length;
             }
         }
-
-        // Event handlers untuk textbox changes
-        private void textBox1_TextChanged(object sender, EventArgs e) { }
-        private void textBox2_TextChanged(object sender, EventArgs e) { }
     }
 }

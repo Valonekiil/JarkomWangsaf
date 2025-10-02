@@ -31,6 +31,9 @@
             this.send_msg_btn = new System.Windows.Forms.Button();
             this.message_box = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.themeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lightThemeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.darkThemeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.connect_ip_box = new System.Windows.Forms.TextBox();
             this.connect_ip_btn = new System.Windows.Forms.Button();
@@ -43,7 +46,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.port_connect_box = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.typing_indicator = new System.Windows.Forms.Label();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // send_msg_btn
@@ -54,7 +57,6 @@
             this.send_msg_btn.TabIndex = 0;
             this.send_msg_btn.Text = "Send";
             this.send_msg_btn.UseVisualStyleBackColor = true;
-            this.send_msg_btn.Click += new System.EventHandler(this.Send_msg_btn_Click);
             // 
             // message_box
             // 
@@ -65,20 +67,43 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.themeToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(522, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // themeToolStripMenuItem
+            // 
+            this.themeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lightThemeToolStripMenuItem,
+            this.darkThemeToolStripMenuItem});
+            this.themeToolStripMenuItem.Name = "themeToolStripMenuItem";
+            this.themeToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.themeToolStripMenuItem.Text = "Theme";
+            // 
+            // lightThemeToolStripMenuItem
+            // 
+            this.lightThemeToolStripMenuItem.Name = "lightThemeToolStripMenuItem";
+            this.lightThemeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.lightThemeToolStripMenuItem.Text = "Light Theme";
+            // 
+            // darkThemeToolStripMenuItem
+            // 
+            this.darkThemeToolStripMenuItem.Name = "darkThemeToolStripMenuItem";
+            this.darkThemeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.darkThemeToolStripMenuItem.Text = "Dark Theme";
+            // 
             // listBox1
             // 
+            this.listBox1.BackColor = System.Drawing.SystemColors.Window;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 64);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(155, 342);
             this.listBox1.TabIndex = 3;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
             // 
             // connect_ip_box
             // 
@@ -100,7 +125,7 @@
             // uname_lbl
             // 
             this.uname_lbl.AutoSize = true;
-            this.uname_lbl.Location = new System.Drawing.Point(9, 8);
+            this.uname_lbl.Location = new System.Drawing.Point(88, 45);
             this.uname_lbl.Name = "uname_lbl";
             this.uname_lbl.Size = new System.Drawing.Size(58, 13);
             this.uname_lbl.TabIndex = 6;
@@ -173,21 +198,11 @@
             this.label3.TabIndex = 14;
             this.label3.Text = "IP:";
             // 
-            // typing_indicator
-            // 
-            this.typing_indicator.AutoSize = true;
-            this.typing_indicator.Location = new System.Drawing.Point(175, 390);
-            this.typing_indicator.Name = "typing_indicator";
-            this.typing_indicator.Size = new System.Drawing.Size(98, 13);
-            this.typing_indicator.TabIndex = 15;
-            this.typing_indicator.Text = "3 person is typing...";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(522, 450);
-            this.Controls.Add(this.typing_indicator);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.port_connect_box);
             this.Controls.Add(this.label2);
@@ -206,6 +221,8 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Cultivation chat";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -228,7 +245,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox port_connect_box;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label typing_indicator;
+        private System.Windows.Forms.ToolStripMenuItem themeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lightThemeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem darkThemeToolStripMenuItem;
     }
 }
-

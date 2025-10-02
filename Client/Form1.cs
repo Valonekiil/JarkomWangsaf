@@ -28,7 +28,6 @@ namespace Client
         private void ApplyLightTheme()
         {
             isDarkMode = false;
-
             this.BackColor = SystemColors.Window;
             chat_list_box.BackColor = SystemColors.Window;
             message_box.BackColor = SystemColors.Window;
@@ -55,15 +54,14 @@ namespace Client
             send_msg_btn.ForeColor = SystemColors.ControlText;
             connect_ip_btn.BackColor = SystemColors.Control;
             connect_ip_btn.ForeColor = SystemColors.ControlText;
-
-            lightThemeToolStripMenuItem.Checked = true;
-            darkThemeToolStripMenuItem.Checked = false;
+            Theme_Btn.BackColor = SystemColors.Control;
+            Theme_Btn.ForeColor = SystemColors.ControlText;
+            Theme_Btn.Text = "Dark";
         }
 
         private void ApplyDarkTheme()
         {
             isDarkMode = true;
-
             Color darkBackground = Color.FromArgb(45, 45, 48);
             Color darkForeground = Color.FromArgb(241, 241, 241);
             Color darkControl = Color.FromArgb(63, 63, 70);
@@ -95,19 +93,21 @@ namespace Client
             send_msg_btn.ForeColor = darkText;
             connect_ip_btn.BackColor = darkControl;
             connect_ip_btn.ForeColor = darkText;
-
-            lightThemeToolStripMenuItem.Checked = false;
-            darkThemeToolStripMenuItem.Checked = true;
+            Theme_Btn.BackColor = darkControl;
+            Theme_Btn.ForeColor = darkText;
+            Theme_Btn.Text = "Light";
         }
 
-        private void LightThemeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Theme_Btn_Click(object sender, EventArgs e)
         {
-            ApplyLightTheme();
-        }
-
-        private void DarkThemeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ApplyDarkTheme();
+            if (isDarkMode)
+            {
+                ApplyLightTheme();
+            }
+            else
+            {
+                ApplyDarkTheme();
+            }
         }
 
         private void ToggleChatFunctionality(bool enable)
@@ -318,7 +318,7 @@ namespace Client
             }
             else
             {
-                chat_list_box.AppendText($"[{DateTime.Now:HH:mm}] [PM from {sender}]: {message}\r\n");
+                chat_list_box.AppendText($"[{DateTime.Now:HH:mm}] [Message from {sender}]: {message}\r\n");
                 chat_list_box.ScrollToCaret();
             }
         }

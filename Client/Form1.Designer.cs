@@ -40,6 +40,10 @@
             this.chat_list_box = new System.Windows.Forms.TextBox();
             this.message_lbl = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.port_connect_box = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.typing_indicator = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // send_msg_btn
@@ -74,28 +78,29 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(155, 342);
             this.listBox1.TabIndex = 3;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
             // 
             // connect_ip_box
             // 
-            this.connect_ip_box.Location = new System.Drawing.Point(316, 3);
+            this.connect_ip_box.Location = new System.Drawing.Point(328, 4);
             this.connect_ip_box.Name = "connect_ip_box";
-            this.connect_ip_box.Size = new System.Drawing.Size(113, 20);
+            this.connect_ip_box.Size = new System.Drawing.Size(97, 20);
             this.connect_ip_box.TabIndex = 4;
             // 
             // connect_ip_btn
             // 
-            this.connect_ip_btn.Location = new System.Drawing.Point(435, 1);
+            this.connect_ip_btn.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.connect_ip_btn.Location = new System.Drawing.Point(435, 2);
             this.connect_ip_btn.Name = "connect_ip_btn";
             this.connect_ip_btn.Size = new System.Drawing.Size(75, 23);
             this.connect_ip_btn.TabIndex = 5;
             this.connect_ip_btn.Text = "Connect";
             this.connect_ip_btn.UseVisualStyleBackColor = true;
-            this.connect_ip_btn.Click += Connect_ip_btn_Click; 
             // 
             // uname_lbl
             // 
             this.uname_lbl.AutoSize = true;
-            this.uname_lbl.Location = new System.Drawing.Point(9, 9);
+            this.uname_lbl.Location = new System.Drawing.Point(9, 8);
             this.uname_lbl.Name = "uname_lbl";
             this.uname_lbl.Size = new System.Drawing.Size(58, 13);
             this.uname_lbl.TabIndex = 6;
@@ -112,9 +117,9 @@
             // 
             // set_username_box
             // 
-            this.set_username_box.Location = new System.Drawing.Point(73, 4);
+            this.set_username_box.Location = new System.Drawing.Point(69, 4);
             this.set_username_box.Name = "set_username_box";
-            this.set_username_box.Size = new System.Drawing.Size(94, 20);
+            this.set_username_box.Size = new System.Drawing.Size(98, 20);
             this.set_username_box.TabIndex = 8;
             // 
             // chat_list_box
@@ -143,11 +148,49 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "Chat";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(177, 8);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Port:";
+            // 
+            // port_connect_box
+            // 
+            this.port_connect_box.Location = new System.Drawing.Point(205, 4);
+            this.port_connect_box.Name = "port_connect_box";
+            this.port_connect_box.Size = new System.Drawing.Size(97, 20);
+            this.port_connect_box.TabIndex = 13;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(307, 8);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(20, 13);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "IP:";
+            // 
+            // typing_indicator
+            // 
+            this.typing_indicator.AutoSize = true;
+            this.typing_indicator.Location = new System.Drawing.Point(175, 390);
+            this.typing_indicator.Name = "typing_indicator";
+            this.typing_indicator.Size = new System.Drawing.Size(98, 13);
+            this.typing_indicator.TabIndex = 15;
+            this.typing_indicator.Text = "3 person is typing...";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(522, 450);
+            this.Controls.Add(this.typing_indicator);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.port_connect_box);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.message_lbl);
             this.Controls.Add(this.chat_list_box);
@@ -182,6 +225,10 @@
         private System.Windows.Forms.TextBox chat_list_box;
         private System.Windows.Forms.Label message_lbl;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox port_connect_box;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label typing_indicator;
     }
 }
 

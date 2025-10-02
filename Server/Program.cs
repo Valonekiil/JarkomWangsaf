@@ -33,7 +33,7 @@ namespace ChatServer
                 try
                 {
                     TcpClient client = await listener.AcceptTcpClientAsync();
-                    _ = Task.Run(() => HandleClient(client));
+                    Task ClientHandling = Task.Run(() => HandleClient(client));
                 }
                 catch (Exception ex)
                 {
@@ -73,7 +73,7 @@ namespace ChatServer
                 clients.Add(clientInfo);
 
                 // Notify all clients about new user
-                BroadcastSystemMessage($"{username} joined the chat");
+                BroadcastSystemMessage($"{username} has appear");
                 await SendUserListToAll();
 
                 Console.WriteLine($"{username} connected from {client.Client.RemoteEndPoint}");
@@ -98,7 +98,7 @@ namespace ChatServer
                 clients.Remove(clientInfo);
                 if (!string.IsNullOrEmpty(clientInfo.Username))
                 {
-                    BroadcastSystemMessage($"{clientInfo.Username} left the chat");
+                    BroadcastSystemMessage($"{clientInfo.Username} has cease to exist");
                     await SendUserListToAll();
                     Console.WriteLine($"{clientInfo.Username} disconnected");
                 }
@@ -137,7 +137,6 @@ namespace ChatServer
                         break;
 
                     case "LOGOUT":
-                        // Client will be disconnected in the main loop
                         break;
                 }
             }
@@ -148,7 +147,7 @@ namespace ChatServer
             string formattedMessage = $"MESSAGE|{sender}|{message}";
             byte[] data = new UTF8Encoding(false, true).GetBytes(formattedMessage + Environment.NewLine);
 
-            foreach (var client in clients.ToArray()) // ToArray to avoid modification during iteration
+            foreach (var client in clients.ToArray())
             {
                 try
                 {
@@ -271,12 +270,11 @@ namespace ChatServer
     {
         static async Task Main(string[] args)
         {
-            // Supaya console bisa tampil emoji dan karakter spesial
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.UTF8;
 
             ChatServer server = new ChatServer();
-            int port = 8888; // Default port
+            int port = 8888;
 
             if (args.Length > 0 && int.TryParse(args[0], out int customPort))
             {

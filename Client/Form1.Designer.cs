@@ -43,6 +43,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.port_connect_box = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.typing_indicator = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // send_msg_btn
@@ -77,6 +78,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(155, 342);
             this.listBox1.TabIndex = 3;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
             // 
             // connect_ip_box
             // 
@@ -87,6 +89,7 @@
             // 
             // connect_ip_btn
             // 
+            this.connect_ip_btn.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.connect_ip_btn.Location = new System.Drawing.Point(435, 2);
             this.connect_ip_btn.Name = "connect_ip_btn";
             this.connect_ip_btn.Size = new System.Drawing.Size(75, 23);
@@ -170,11 +173,21 @@
             this.label3.TabIndex = 14;
             this.label3.Text = "IP:";
             // 
+            // typing_indicator
+            // 
+            this.typing_indicator.AutoSize = true;
+            this.typing_indicator.Location = new System.Drawing.Point(175, 390);
+            this.typing_indicator.Name = "typing_indicator";
+            this.typing_indicator.Size = new System.Drawing.Size(98, 13);
+            this.typing_indicator.TabIndex = 15;
+            this.typing_indicator.Text = "3 person is typing...";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(522, 450);
+            this.Controls.Add(this.typing_indicator);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.port_connect_box);
             this.Controls.Add(this.label2);
@@ -215,6 +228,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox port_connect_box;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label typing_indicator;
     }
 }
 
